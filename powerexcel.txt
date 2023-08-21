@@ -1,0 +1,42 @@
+CodigoCaja,FechaInicial,FechaFinal,Fecha3,Tipo,Fecha4,Valor
+1,06/10/2020,12/10/2020,,cajoso,14/10/2020,10
+1,10/10/2020,12/10/2020,14/10/2020,cajoso,,20
+1,11/10/2020,12/10/2020,,cajoso,15/10/2020,30
+2,10/10/2020,12/10/2020,,cajoso,,20
+2,10/10/2020,12/10/2020,14/10/2020,cajoso,,30
+2,12/10/2020,12/10/2020,,cajoso,10/10/2020,40
+
+
+=List.Combine({List.Dates([FechaInicial],
+	Duration.Days([FechaFinal]-[FechaInicial])+1,
+	#duration(1,0,0,0) each Date.DayOfWeek(_, Day.Monday) <> 0), {[Fecha3]}
+	})
+ List.Combine({
+            List.Dates([FechaInicial], Duration.From(Duration.From([FechaFinal] - [FechaInicial]) + #duration(1, 0, 0, 0)), #duration(1, 0, 0, 0)),
+            {[FechaTercera]},
+            {[FechaCuarta]}
+        })
+
+each Date.DayOfWeek(_, Day.Monday) <> 0
+
+rango de fechas completo sin excluir domingo
+
+=List.Combine({List.Dates([FechaInicial],
+	Duration.Days([FechaFinal]-[FechaInicial])+1,
+	#duration(1,0,0,0) each Date.DayOfWeek(_, Day.Monday) <> 0), {[Fecha3]}
+	})
+
+
+NO TE OLVIDES DE CONVERTIR AGENCIA A TEXTO!!!
+
+excluimos domingo
+
+=List.Combine({List.Select(
+    List.Dates([FechaInicial], Duration.Days([FechaFinal] - [FechaInicial]) + 1, #duration(1, 0, 0, 0)),
+    each Date.DayOfWeek(_, Day.Sunday) <> 0
+), {[Fecha3]}, {[Fecha4]}
+})
+
+concatenar listas de columnas
+each Text.Combine([Valor], ", ")
+##reemplazar Valor por nombre de fila
